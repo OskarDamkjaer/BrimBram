@@ -4,6 +4,12 @@
 
 <script lang="ts">
 	import Counter from '$lib/Counter.svelte';
+	import PlayerButton from '$lib/PlayerButton.svelte';
+
+	type PlayerCount = 2 | 3 | 4;
+
+	let selectedPlayerCount: PlayerCount = 4;
+	const playerCounts: PlayerCount[] = [2, 3, 4];
 </script>
 
 <svelte:head>
@@ -11,16 +17,17 @@
 </svelte:head>
 
 <section>
-	<h1>
-		<div class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</div>
+	<h1>Set up game</h1>
 
-		to your new<br />SvelteKit app
-	</h1>
+	{#each playerCounts as num}
+		<PlayerButton
+			selectCount={() => {
+				selectedPlayerCount = num;
+			}}
+			selected={num === selectedPlayerCount}
+			count={num}
+		/>
+	{/each}
 
 	<h2>
 		try editing <strong>src/routes/index.svelte</strong>
