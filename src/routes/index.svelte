@@ -19,15 +19,17 @@
 <section>
 	<h1>Set up game</h1>
 
-	{#each playerCounts as num}
-		<PlayerButton
-			selectCount={() => {
-				selectedPlayerCount = num;
-			}}
-			selected={num === selectedPlayerCount}
-			count={num}
-		/>
-	{/each}
+	<span class="flex space-x-2">
+		{#each playerCounts as num}
+			<PlayerButton
+				selectCount={() => {
+					selectedPlayerCount = num;
+				}}
+				selected={num === selectedPlayerCount}
+				count={num}
+			/>
+		{/each}
+	</span>
 
 	<h2>
 		try editing <strong>src/routes/index.svelte</strong>
