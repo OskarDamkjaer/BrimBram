@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let count;
+	export let count: number;
 	export let selected: boolean = false;
 	export let selectCount: () => void;
 </script>
@@ -12,6 +12,3 @@
 >
 	{count}
 </button>
-
-<style>
-</style>
