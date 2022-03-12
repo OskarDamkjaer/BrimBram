@@ -1,5 +1,3 @@
-import { getRandomizer } from './rand';
-
 function createDeck(playerCount: number) {
 	if (playerCount < 2 || playerCount > 5) {
 		throw new Error(`Invalid player count, got ${playerCount} only 2,3,4 allowed`);
@@ -11,16 +9,14 @@ function createDeck(playerCount: number) {
 	);
 }
 
-function shuffle(deck: string[], seed: number) {
-	const rand = getRandomizer(seed);
-
+function shuffle(deck: string[], rand: () => number) {
 	return deck
 		.map((value) => ({ value, sort: rand() }))
 		.sort((a, b) => a.sort - b.sort)
 		.map(({ value }) => value);
 }
 
-function split(deck: string[], pieceCount: number) {
+function split<T>(deck: T[], pieceCount: number) {
 	return deck.reduce((acc, card, index) => {
 		const shouldGet = index % pieceCount;
 		const curr = acc[shouldGet];
@@ -28,17 +24,25 @@ function split(deck: string[], pieceCount: number) {
 	}, {});
 }
 
-type CreateDeckParams = { playerCount: number; seed: number; playerIndex: number };
-export function createDeckForPlayer({
-	playerCount,
-	seed,
-	playerIndex
-}: CreateDeckParams): string[] {
-	const deck = createDeck(playerCount);
-	const shuffledDeck = shuffle(deck, seed);
-	const inPieces = split(shuffledDeck, playerCount);
+function enchance(name: string, index: number): Card {
+	return { name, color: cardColor[name], state: 'deck', position: index };
+}
 
-	return inPieces[playerIndex];
+type CreateDeckParams = { playerCount: number; rand: () => number; playerIndex: number };
+export type Card = {
+	name: string;
+	color: string;
+	state: 'discard' | 'hand' | 'deck';
+	position: number;
+};
+
+export function createDeckForPlayer({ playerCount, rand, playerIndex }: CreateDeckParams): Card[] {
+	const deck = createDeck(playerCount);
+	const shuffledDeck = shuffle(deck, rand);
+	const inPieces = split(shuffledDeck, playerCount);
+	const playerDeck = inPieces[playerIndex];
+
+	return playerDeck.map(enchance);
 }
 
 // prettier-ignore
@@ -69,7 +73,6 @@ export const cardDistribition = {
 	'MAN. GOODS / COTTON MILL': { 2: 0, 3: 6, 4: 8, },
 	POTTERY:                    { 2: 2, 3: 2, 4: 2, },
 	BREWERY:                    { 2: 5, 3: 5, 4: 5, },
-
 };
 
 export const cardColor = {
