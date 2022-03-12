@@ -20,6 +20,11 @@
 	$: currentPlayer = players[currentPlayerIndex];
 	$: isHost = currentPlayerIndex === 0;
 
+	// TODO implement undo och dra efter två kort.
+	// TODO allow custom sorting in hand
+	// TODO sort by time in hand
+	// TODO moneytarcker?
+
 	let showButton;
 	$: showButton = isHost;
 	let onCopyButtonClick = () => {
