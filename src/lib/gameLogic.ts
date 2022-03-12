@@ -75,9 +75,9 @@ export const cardDistribition = {
 	BREWERY:                    { 2: 5, 3: 5, 4: 5, },
 };
 
-export const cardColor = {
-	BELPER: 'teal',
-	DERBY: 'teal',
+const cardColor = {
+	BELPER: 'green',
+	DERBY: 'green',
 	LEEK: 'blue',
 	'STOKE-ON TRENT': 'blue',
 	STONE: 'blue',

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CardComponent from './CardComponent.svelte';
-	import { cardColor, createDeckForPlayer } from './gameLogic';
+	import { createDeckForPlayer } from './gameLogic';
 	import type { Card } from './gameLogic';
 	import { onMount } from 'svelte';
 	import { getRandomizer } from './rand';
@@ -110,49 +110,62 @@
 	{/if}
 </h1>
 
-{#each inDeck as card}
-	<CardComponent {card} />
-{/each}
+CARDS LEFT IN DECK: {inDeck.length}
+{#if lastPlayedIndex}
+	<button on:click={unplayCard}>undo</button>
+{/if}
 
-{#each inHand as card}
-	<span
+{#if wildCards.length === 0 && inHand.length > 1}
+	<button
 		on:click={() => {
-			if (showingWildCardPicker) {
-				if (!selectedForDiscard.includes(card)) {
-					selectedForDiscard = [...selectedForDiscard, card];
-					if (selectedForDiscard.length === 2 && inHand.length === 2) {
-						selectedForDiscard.forEach((c) => {
-							mutateDeck(c.position, { state: 'discard' });
-							wildCards = [WILD_LOCATION];
-							selectedForDiscard = [];
-							// Scout action not undoable -> pga pallar ej
-							drawToFullHandIfShould(null);
-							showingWildCardPicker = false;
-						});
-					} else if (selectedForDiscard.length === 3) {
-						selectedForDiscard.forEach((c) => {
-							mutateDeck(c.position, { state: 'discard' });
-							wildCards = [WILD_LOCATION, WILD_INDUSTRY];
-							selectedForDiscard = [];
-							// Scout action not undoable -> pga pallar ej
-							drawToFullHandIfShould(null);
-							showingWildCardPicker = false;
-						});
-					}
-				}
-			} else {
-				if (card.position === -1) {
-					wildCards = wildCards.filter((wc) => wc.name !== card.name);
-				} else {
-					playCard(card.position);
-				}
-				drawToFullHandIfShould(card.position);
-			}
-		}}
+			showingWildCardPicker = true;
+		}}>get wildcards</button
 	>
-		<CardComponent {card} />
-	</span>
-{/each}
+{/if}
+
+<div class="flex">
+	{#each inHand as card}
+		<button
+			class="m-1 break-all"
+			style={`background-color: ${card.color}; width: 100px; height: 100px;`}
+			on:click={() => {
+				if (showingWildCardPicker) {
+					if (!selectedForDiscard.includes(card)) {
+						selectedForDiscard = [...selectedForDiscard, card];
+						if (selectedForDiscard.length === 2 && inHand.length === 2) {
+							selectedForDiscard.forEach((c) => {
+								mutateDeck(c.position, { state: 'discard' });
+								wildCards = [WILD_LOCATION];
+								selectedForDiscard = [];
+								// Scout action not undoable -> pga pallar ej
+								drawToFullHandIfShould(null);
+								showingWildCardPicker = false;
+							});
+						} else if (selectedForDiscard.length === 3) {
+							selectedForDiscard.forEach((c) => {
+								mutateDeck(c.position, { state: 'discard' });
+								wildCards = [WILD_LOCATION, WILD_INDUSTRY];
+								selectedForDiscard = [];
+								// Scout action not undoable -> pga pallar ej
+								drawToFullHandIfShould(null);
+								showingWildCardPicker = false;
+							});
+						}
+					}
+				} else {
+					if (card.position === -1) {
+						wildCards = wildCards.filter((wc) => wc.name !== card.name);
+					} else {
+						playCard(card.position);
+					}
+					drawToFullHandIfShould(card.position);
+				}
+			}}
+		>
+			<CardComponent {card} />
+		</button>
+	{/each}
+</div>
 
 DISCARD:
 {#each inDiscard as card, i}
@@ -173,16 +186,4 @@ DISCARD:
 	{:else}
 		<h1>game over, good luck in the scoring</h1>
 	{/if}
-{/if}
-
-{#if lastPlayedIndex}
-	<button on:click={unplayCard}>undo</button>
-{/if}
-
-{#if wildCards.length === 0 && inHand.length > 1}
-	<button
-		on:click={() => {
-			showingWildCardPicker = true;
-		}}>get wildcards</button
-	>
 {/if}
