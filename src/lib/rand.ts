@@ -25,5 +25,5 @@ export function getRandomizer(num: number) {
 }
 
 export function createSemiRandomSeed() {
-	return Math.random() * 10000000;
+	return Math.floor(Math.random() * 10000000);
 }

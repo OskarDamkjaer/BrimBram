@@ -6,8 +6,9 @@
 	import PlayerButton from '$lib/PlayerButton.svelte';
 	import { page } from '$app/stores';
 	import { replaceStateWithQuery } from '../lib/url';
-	import { createSemiRandomSeed, getRandomizer } from '../lib/rand';
+	import { createSemiRandomSeed } from '../lib/rand';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	type PlayerCount = 2 | 3 | 4;
 
@@ -31,6 +32,9 @@
 		replaceStateWithQuery({ pcount: num.toString() });
 		firstPlayerInputField?.select();
 	};
+	onMount(() => {
+		firstPlayerInputField?.select();
+	});
 
 	// todo. some time in future -> allow for game nbr2
 	// todo. encode url?
@@ -39,13 +43,14 @@
 		goto(
 			`/game?seed=${seed}${players
 				.slice(0, selectedPlayerCount)
-				.map((p, i) => `&p${i + 1}=${p.name}`)}&you=1`
+				.map((p, i) => `&p${i + 1}=${p.name}`)
+				.join('')}&you=1`
 		);
 	}
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Setup</title>
 </svelte:head>
 
 <section>
