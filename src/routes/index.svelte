@@ -1,7 +1,3 @@
-<script context="module" lang="ts">
-	export const prerender = true;
-</script>
-
 <script lang="ts">
 	import PlayerButton from '$lib/PlayerButton.svelte';
 	import { page } from '$app/stores';
