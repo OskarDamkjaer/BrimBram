@@ -54,7 +54,7 @@
 </svelte:head>
 
 <section>
-	<h1>Set up game</h1>
+	<h1>Set up BrimBram Game!</h1>
 	<form class="flex flex-col items-center" on:submit={onSubmit}>
 		<h2>Select player count</h2>
 		<span class="flex space-x-2">

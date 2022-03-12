@@ -67,6 +67,7 @@
 		} else {
 			mutateDeck(lastPlayedIndex, { state: 'hand' });
 		}
+		lastPlayedIndex = null;
 	}
 
 	function drawOpeningHand() {
